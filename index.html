@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VLXD Manager - Phần mềm quản lý cửa hàng Vật Liệu Xây Dựng chuyên sâu. Lắp đặt bản Offline cục bộ bảo mật hoặc bản Online đám mây truy cập mọi nơi. Quy đổi đơn vị thông minh, kiểm soát công nợ lưỡng tính chặt chẽ.">
+    <meta name="keywords" content="phần mềm quản lý vật liệu xây dựng, quản lý vlxd, quản lý kho vlxd, quy đổi cát đá, công nợ nhà thầu, quản lý vật tư">
+    <meta name="author" content="VLXD Manager">
+    <meta property="og:title" content="VLXD Manager - Số Hóa Quản Lý Vật Liệu Xây Dựng">
+    <meta property="og:description" content="Hỗ trợ cài đặt Offline tại cửa hàng hoặc chạy Online đám mây. Quy đổi đơn vị tự động. Gọi ngay: 0986929914.">
+    <title>VLXD Manager - Giải Pháp Quản Lý Cửa Hàng Vật Liệu Xây Dựng Thông Minh</title>
+    
+    <!-- Google Fonts: Be Vietnam Pro (Optimized for Vietnamese diacritics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Be Vietnam Pro', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom CSS Styles -->
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #c2410c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-brand-500 selection:text-white" x-data="{ mobileMenuOpen: false }">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-slate-200/50 glass-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group flex-shrink-0">
+                <div class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-brand-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-105 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="white" class="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">
+                        VLXD Manager
+                    </span>
+                    <span class="block text-[10px] text-orange-500 font-bold uppercase tracking-widest -mt-1 whitespace-nowrap">
+                        Hệ thống Số Hóa Vật Tư
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center space-x-3 lg:space-x-5 xl:space-x-8 font-semibold text-slate-600 text-xs lg:text-sm xl:text-base flex-shrink-0">
+                <a href="#loi-ich" class="hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">Lợi Ích</a>
+                <a href="#chuc-nang" class="hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">Tính Năng</a>
+                <a href="#giai-phap" class="hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">Offline/Online</a>
+                <a href="#trai-nghiem" class="hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">Trải Nghiệm</a>
+                <a href="#faq" class="hover:text-brand-600 transition-colors duration-200 whitespace-nowrap">Hỏi Đáp</a>
+            </nav>
+
+            <!-- Action Button & Hotline -->
+            <div class="hidden lg:flex items-center space-x-3 xl:space-x-6 flex-shrink-0">
+                <a href="tel:0986929914" class="flex items-center space-x-2 text-slate-700 hover:text-brand-600 font-extrabold transition-colors whitespace-nowrap">
+                    <div class="h-9 w-9 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 text-orange-600 animate-bounce">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.802-5.186-4.164-7.01-6.986l1.293-.97c.362-.271.528-.732.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                        </svg>
+                    </div>
+                    <span class="text-base">0986.929.914</span>
+                </a>
+                <a href="tel:0986929914" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-orange-600 text-white font-bold text-sm shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-95 transition-all duration-200 whitespace-nowrap">
+                    Gọi Ngay Tư Vấn
+                </a>
+            </div>
+
+            <!-- Hamburger menu button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="Mở menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6" x-show="!mobileMenuOpen">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6" x-show="mobileMenuOpen" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t border-slate-200 px-4 py-4 space-y-3 shadow-lg" style="display: none;">
+            <a href="#loi-ich" @click="mobileMenuOpen = false" class="block py-2 px-3 rounded-lg hover:bg-slate-50 font-semibold text-slate-700">Lợi Ích</a>
+            <a href="#chuc-nang" @click="mobileMenuOpen = false" class="block py-2 px-3 rounded-lg hover:bg-slate-50 font-semibold text-slate-700">Tính Năng</a>
+            <a href="#giai-phap" @click="mobileMenuOpen = false" class="block py-2 px-3 rounded-lg hover:bg-slate-50 font-semibold text-slate-700">Offline/Online</a>
+            <a href="#trai-nghiem" @click="mobileMenuOpen = false" class="block py-2 px-3 rounded-lg hover:bg-slate-50 font-semibold text-slate-700">Trải Nghiệm</a>
+            <a href="#faq" @click="mobileMenuOpen = false" class="block py-2 px-3 rounded-lg hover:bg-slate-50 font-semibold text-slate-700">Hỏi Đáp</a>
+            <div class="pt-4 border-t border-slate-100 flex flex-col space-y-3">
+                <a href="tel:0986929914" class="flex items-center space-x-2 text-slate-700 font-extrabold px-3 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 text-orange-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.802-5.186-4.164-7.01-6.986l1.293-.97c.362-.271.528-.732.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                    </svg>
+                    <span class="text-base">0986.929.914</span>
+                </a>
+                <a href="tel:0986929914" class="text-center w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-orange-600 text-white font-bold shadow-md shadow-orange-500/20">
+                    Gọi Ngay Hotline
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-amber-500/5 via-transparent to-transparent">
+        <!-- Floating background shapes -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-200/20 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute top-1/2 -left-40 w-96 h-96 bg-orange-200/10 rounded-full blur-3xl -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                <!-- Text Area -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-bold text-xs tracking-wider uppercase shadow-sm">
+                        ⚡ Sự lựa chọn tối ưu cho đại lý & cửa hàng VLXD
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight">
+                        Phần Mềm Quản Lý VLXD <br>
+                        <span class="gradient-text">Bản Cài Offline Hoặc Online</span>
+                    </h1>
+                    
+                    <p class="text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        Cung cấp 2 phiên bản độc lập theo nhu cầu: **Offline** cài cố định tại máy tính cửa hàng bảo mật tuyệt đối, hoặc **Online** chạy trên đám mây để truy cập quản lý từ xa. Tự động quy đổi đơn vị và theo dõi công nợ chi tiết.
+                    </p>
+
+                    <!-- CTAs calling directly to Hotline -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="tel:0986929914" class="w-full sm:w-auto inline-flex items-center justify-center space-x-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-orange-600 text-white font-bold shadow-xl shadow-orange-500/35 hover:shadow-orange-500/45 hover:scale-[1.02] transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.802-5.186-4.164-7.01-6.986l1.293-.97c.362-.271.528-.732.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg>
+                            <span>Gọi Hotline: 0986.929.914</span>
+                        </a>
+                        <a href="https://zalo.me/0986929914" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:scale-[1.02] transition duration-200">
+                            <span>Liên Hệ Qua Zalo</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust indicators -->
+                    <div class="pt-4 flex flex-col sm:flex-row items-center gap-4 text-sm text-slate-500 justify-center lg:justify-start">
+                        <div class="flex -space-x-2">
+                            <span class="h-8 w-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center font-bold text-xs">C</span>
+                            <span class="h-8 w-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center font-bold text-xs">Đ</span>
+                            <span class="h-8 w-8 rounded-full bg-slate-400 border-2 border-white flex items-center justify-center font-bold text-xs">S</span>
+                        </div>
+                        <div>
+                            Bảo vệ an toàn dữ liệu. Gọi ngay để lắp đặt: <a href="tel:0986929914" class="text-orange-600 font-extrabold underline hover:text-orange-700">0986.929.914</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphic/Visual Area (Mockup/Simulator preview) -->
+                <div class="lg:col-span-5 relative" x-data="{ deployMode: 'offline' }">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-300 to-orange-500 rounded-3xl blur-2xl opacity-20 -z-10"></div>
+                    
+                    <!-- Dashboard Mockup Card -->
+                    <div class="bg-white border border-slate-200/80 rounded-3xl shadow-2xl p-6 space-y-6 relative">
+                        <!-- Card Header simulating OS app window -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                <span class="text-xs font-semibold text-slate-400 ml-2">Phương thức cài đặt</span>
+                            </div>
+                            
+                            <!-- Deployment Mode toggler -->
+                            <div class="flex rounded-lg bg-slate-100 p-1 text-xs font-bold">
+                                <button @click="deployMode = 'offline'" class="px-2.5 py-1 rounded-md transition duration-150"
+                                    :class="deployMode === 'offline' ? 'bg-white shadow text-slate-900' : 'text-slate-500'">
+                                    Offline
+                                </button>
+                                <button @click="deployMode = 'online'" class="px-2.5 py-1 rounded-md transition duration-150"
+                                    :class="deployMode === 'online' ? 'bg-white shadow text-slate-900' : 'text-slate-500'">
+                                    Online
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mini Chart and Metrics -->
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                    <span class="block text-xs font-bold text-slate-400 uppercase">Đường truyền</span>
+                                    <span class="block text-lg font-black text-slate-900 mt-1" x-text="deployMode === 'offline' ? 'Không cần mạng' : 'Có mạng internet'"></span>
+                                    <span class="text-[10px] text-green-600 font-bold" x-text="deployMode === 'offline' ? '⚡ Ổn định 100%' : '☁ Server Đám Mây'"></span>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                    <span class="block text-xs font-bold text-slate-400 uppercase">Truy cập từ xa</span>
+                                    <span class="block text-lg font-black text-slate-900 mt-1" x-text="deployMode === 'offline' ? 'Tại cửa hàng' : 'Mở máy từ xa'"></span>
+                                    <span class="text-[10px] font-semibold text-slate-500" x-text="deployMode === 'offline' ? 'Mạng LAN nội bộ' : 'Truy cập Web toàn cầu'"></span>
+                                </div>
+                            </div>
+
+                            <!-- Explain chosen mode -->
+                            <div class="rounded-2xl p-4 text-xs space-y-2 border transition duration-300" 
+                                :class="deployMode === 'offline' ? 'bg-amber-50/50 border-amber-100 text-amber-900' : 'bg-blue-50/50 border-blue-100 text-blue-900'">
+                                <div class="flex items-center space-x-2 font-bold text-sm">
+                                    <span x-show="deployMode === 'offline'">🖥️ Cài Đặt Offline Cố Định</span>
+                                    <span x-show="deployMode === 'online'">☁ Triển Khai Online Đám Mây</span>
+                                </div>
+                                <p class="text-slate-500 leading-normal" x-show="deployMode === 'offline'">
+                                    Hệ thống cài cố định trên máy PC tại cửa hàng. Cơ sở dữ liệu SQLite/MySQL lưu trữ tại chỗ. Không sợ đứt cáp quang hay mất điện thoại. An toàn dữ liệu tuyệt đối.
+                                </p>
+                                <p class="text-slate-500 leading-normal" x-show="deployMode === 'online'">
+                                    Phần mềm đưa lên Hosting/Cloud, cấp đường link truy cập riêng. Giúp bạn quản lý cửa hàng, kiểm tra doanh số và công nợ qua điện thoại ở bất kỳ nơi nào có mạng 3G/4G/Wifi.
+                                </p>
+                            </div>
+
+                            <!-- Warehouse conversion simulation graphic -->
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+                                <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                                    <span>Quy đổi vật tư tức thì</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs sm:text-sm font-semibold">
+                                    <span class="text-slate-600">10 Tấn Cát xây dựng</span>
+                                    <span class="text-slate-400">➔</span>
+                                    <span class="text-orange-600 font-extrabold">6.70 Mét Khối (m³)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOMER PERSPECTIVES -->
+    <section id="loi-ich" class="py-20 bg-white border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Được Thiết Kế Cho <span class="gradient-text">Từng Góc Nhìn</span> Trong Doanh Nghiệp
+                </h2>
+                <p class="text-lg text-slate-500 leading-relaxed">
+                    VLXD Manager mang lại giá trị thiết thực và sự hài lòng cho mọi vai trò vận hành bên trong và bên ngoài cửa hàng.
+                </p>
+            </div>
+
+            <!-- Tabs Container -->
+            <div x-data="{ activeTab: 'chu-cua-hang' }" class="space-y-12">
+                <!-- Tab Buttons -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 border-b border-slate-200 pb-px font-bold">
+                    <button @click="activeTab = 'chu-cua-hang'" class="pb-4 px-6 text-sm sm:text-base border-b-2 transition-all duration-200 outline-none"
+                        :class="activeTab === 'chu-cua-hang' ? 'border-brand-500 text-brand-600' : 'border-transparent text-slate-400 hover:text-slate-600'">
+                        💼 Chủ Cửa Hàng
+                    </button>
+                    <button @click="activeTab = 'thu-kho'" class="pb-4 px-6 text-sm sm:text-base border-b-2 transition-all duration-200 outline-none"
+                        :class="activeTab === 'thu-kho' ? 'border-brand-500 text-brand-600' : 'border-transparent text-slate-400 hover:text-slate-600'">
+                        📦 Thủ Kho / Nhân Viên
+                    </button>
+                    <button @click="activeTab = 'ke-toan'" class="pb-4 px-6 text-sm sm:text-base border-b-2 transition-all duration-200 outline-none"
+                        :class="activeTab === 'ke-toan' ? 'border-brand-500 text-brand-600' : 'border-transparent text-slate-400 hover:text-slate-600'">
+                        🧮 Kế Toán Cửa Hàng
+                    </button>
+                    <button @click="activeTab = 'doi-tac'" class="pb-4 px-6 text-sm sm:text-base border-b-2 transition-all duration-200 outline-none"
+                        :class="activeTab === 'doi-tac' ? 'border-brand-500 text-brand-600' : 'border-transparent text-slate-400 hover:text-slate-600'">
+                        🏗️ Nhà Thầu & Khách Hàng
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="relative min-h-[300px]">
+                    <!-- Tab 1: Owner -->
+                    <div x-show="activeTab === 'chu-cua-hang'" x-transition class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-7 space-y-6">
+                            <h3 class="text-2xl font-black text-slate-900 leading-tight">
+                                Kiểm soát tối đa, giảm thiểu thất thoát kho và quản lý dòng tiền dễ dàng
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Giúp chủ cửa hàng giải quyết bài toán đau đầu nhất: hàng hóa cồng kềnh, hao hụt kho tự nhiên lớn, và khó kiểm soát công nợ gối đầu của nhiều công trình cùng lúc:
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Báo cáo tức thì mọi lúc</strong>: Theo dõi doanh thu, công nợ, lợi nhuận gộp chi tiết từng ngày qua biểu đồ trực quan.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Nhật ký hoạt động bảo mật</strong>: Theo dõi toàn bộ thao tác của nhân viên (Activity Logs) tránh việc tự ý sửa phiếu, gian lận dòng tiền.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Giới hạn nợ an toàn</strong>: Hệ thống cảnh báo tự động khi khách vượt hạn mức nợ cho phép, giảm thiểu nguy cơ nợ xấu.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="lg:col-span-5 bg-gradient-to-tr from-brand-100 to-amber-200/40 p-8 rounded-3xl border border-brand-200/50">
+                            <span class="text-xs uppercase font-bold text-brand-700 tracking-wider">Đại diện khách hàng chia sẻ</span>
+                            <blockquote class="mt-4 text-slate-800 font-semibold italic">
+                                "Tôi chọn giải pháp lắp đặt Offline trực tiếp cho máy PC ở cửa hàng để bảo mật doanh số, kết hợp với mạng LAN nội bộ. Nhân viên bán hàng tạo đơn in phiếu cực nhanh. Tôi cực kỳ yên tâm khi nắm giữ hoàn toàn dữ liệu."
+                            </blockquote>
+                            <div class="mt-6 flex items-center space-x-3">
+                                <div class="h-10 w-10 rounded-full bg-orange-600 flex items-center justify-center text-white font-bold">L</div>
+                                <div>
+                                    <span class="block font-bold text-slate-900 text-sm">Anh Nguyễn Đăng Lâm</span>
+                                    <span class="block text-xs text-slate-500">Chủ đại lý VLXD Lâm Phát (Đồng Nai)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Warehouse Keeper -->
+                    <div x-show="activeTab === 'thu-kho'" x-transition class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center" style="display:none;">
+                        <div class="lg:col-span-7 space-y-6">
+                            <h3 class="text-2xl font-black text-slate-900 leading-tight">
+                                Quy đổi đơn vị tính thông minh chỉ trong 1 giây, xuất kho chính xác
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Thủ kho không còn phải đau đầu làm các phép toán quy đổi phức tạp: Nhập thép cuộn theo tấn nhưng bán theo kg, nhập xi măng theo tấn bán lẻ theo bao, cát nhập theo xe bán theo khối:
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Hệ thống tự động quy đổi</strong>: Nhập số lượng đơn vị bán lẻ, hệ thống tự động tính toán trừ kho theo đơn vị nhập hàng chính xác.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Quản lý đa kho bãi</strong>: Sắp xếp vật tư theo nhiều kho bãi riêng biệt (Kho cát đá, kho xi măng, bãi thép...).</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Giao diện tạo phiếu nhanh</strong>: Thao tác lập phiếu nhập/xuất kho dễ sử dụng, in hóa đơn giao nhận nhanh cho tài xế xe ben chở đi công trình.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="lg:col-span-5 bg-gradient-to-tr from-slate-100 to-slate-200/50 p-8 rounded-3xl border border-slate-200">
+                            <span class="text-xs uppercase font-bold text-slate-700 tracking-wider">Hỗ trợ vận hành</span>
+                            <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+                                Hệ thống hỗ trợ nhãn hiển thị mức độ tồn kho động (StockBadge), tự động cảnh báo màu đỏ nổi bật khi số lượng gạch, cát, thép dưới mức an toàn tối thiểu để thủ kho kịp thời báo cáo nhập thêm vật tư.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Accountant -->
+                    <div x-show="activeTab === 'ke-toan'" x-transition class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center" style="display:none;">
+                        <div class="lg:col-span-7 space-y-6">
+                            <h3 class="text-2xl font-black text-slate-900 leading-tight">
+                                Công nợ lưỡng tính thông minh, đối chiếu nhanh gọn và xuất Excel tức thì
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Kế toán VLXD nhẹ gánh nhờ quy trình quản lý nợ gối đầu và dòng tiền thu chi ngân hàng được thiết kế tinh gọn:
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Tách biệt nợ thông minh</strong>: Phân biệt rõ ràng nợ phải thu (Khách hàng) và nợ phải trả (Nhà cung cấp), tự động cấn trừ khi trả hàng.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Lịch sử dòng tiền chi tiết</strong>: Liên kết thanh toán với tài khoản ngân hàng cụ thể để dễ đối soát. Cho phép hủy phiếu thu/chi sai sót để hệ thống tự động phục hồi nợ cũ.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Kết xuất Excel nhanh chóng</strong>: Xuất sao kê công nợ chi tiết gửi cho các nhà thầu đối soát cuối tháng chỉ với 1 click chuột.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="lg:col-span-5 bg-gradient-to-tr from-emerald-50 to-emerald-100/50 p-8 rounded-3xl border border-emerald-200">
+                            <span class="text-xs uppercase font-bold text-emerald-800 tracking-wider">Tiện ích tối ưu</span>
+                            <div class="mt-4 p-4 bg-white rounded-2xl border border-emerald-100 space-y-3 text-xs sm:text-sm">
+                                <div class="font-bold text-slate-700">Tích hợp thanh toán QR Code</div>
+                                <p class="text-slate-500 leading-relaxed">
+                                    Phiếu thu bán hàng tự động sinh mã QR ngân hàng động chứa thông tin hóa đơn và số tiền cần chuyển. Khách hàng chỉ cần quét mã trên điện thoại, tiền vào tài khoản và hệ thống đối soát chính xác 100%.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Partner/Contractor -->
+                    <div x-show="activeTab === 'doi-tac'" x-transition class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center" style="display:none;">
+                        <div class="lg:col-span-7 space-y-6">
+                            <h3 class="text-2xl font-black text-slate-900 leading-tight">
+                                Minh bạch sao kê nợ nần, hóa đơn chi tiết, nâng cao mức độ tin cậy
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Các nhà thầu, chủ đầu tư, thợ xây luôn cần sự rõ ràng về đơn giá, số lượng vật tư chuyển đến công trình và lịch sử các đợt trả tiền gối đầu:
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Hóa đơn in chuyên nghiệp</strong>: Hiển thị đầy đủ thông tin đơn vị nhập gốc, quy đổi và đơn giá chi tiết cho từng loại gạch, cát, đá xanh, xi măng.</span>
+                                </li>
+                                <li class="flex items-start space-x-3 text-slate-600">
+                                    <span class="mt-1 flex items-center justify-center h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 font-extrabold text-xs">✓</span>
+                                    <span><strong>Sao kê dòng tiền rõ ràng</strong>: Ghi nhận đầy đủ các đợt ứng tiền, cấn trừ công nợ, hạn chế tối đa tranh cãi sổ sách cuối tháng.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="lg:col-span-5 bg-gradient-to-tr from-brand-5 to-orange-100/30 p-8 rounded-3xl border border-brand-100">
+                            <span class="text-xs uppercase font-bold text-brand-800 tracking-wider">Đánh giá từ nhà thầu xây dựng</span>
+                            <blockquote class="mt-4 text-slate-800 font-semibold italic text-sm leading-relaxed">
+                                "Lập phiếu thủ công bằng tay rất dễ tính nhầm số lượng xe cát xe đá chở đến công trường. Mua hàng ở đại lý sử dụng phần mềm in phiếu tự động rõ ràng này giúp tôi dễ dàng kiểm kho và tin tưởng tuyệt đối vào số liệu đối chiếu."
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE FEATURES GRID -->
+    <section id="chuc-nang" class="py-20 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Tính Năng Nghiệp Vụ <span class="gradient-text">Chuyên Sâu & Đầy Đủ</span>
+                </h2>
+                <p class="text-lg text-slate-500 leading-relaxed">
+                    Được thiết kế chuyên biệt đáp ứng nhu cầu thực tế của cửa hàng và nhà phân phối vật liệu xây dựng.
+                </p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Quy Đổi Đơn Vị Tính Linh Hoạt</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Tự do thiết lập quy đổi đơn vị tính thông minh cho từng loại mặt hàng (như tấn sang khối, bao sang kg, cây sang kg...). Phần mềm tự động quy đổi khi bán hàng hoặc nhập kho.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-orange-500/10 text-orange-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Mua & Bán Hàng Trực Quan</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Quản lý đơn mua hàng từ nhà cung cấp và đơn bán hàng giao cho khách. Hỗ trợ tính năng chỉnh sửa phiếu đã lưu (tự động hoàn trả/cập nhật lại số lượng tồn kho thực tế).
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Quản Lý Công Nợ Lưỡng Tính</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Theo dõi công nợ chi tiết gối đầu của cả khách hàng và nhà cung cấp. Lập phiếu thu/chi nhanh, ghi nhận lịch sử các đợt thanh toán, và cho phép hủy phiếu thu/chi sai sót để hoàn nợ.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Hệ Thống Báo Cáo Chuyên Sâu</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Xem nhanh 4 loại báo cáo nghiệp vụ: Báo cáo tồn kho, Sổ biến động kho hàng, Báo cáo công nợ nhà thầu, Báo cáo công nợ nhà cung cấp. Lọc theo thời gian và xuất file Excel cực nhanh.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75-3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Quản Lý Tài Khoản Ngân Hàng</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Liên kết dòng tiền thu/chi qua chuyển khoản ngân hàng với các tài khoản ngân hàng cụ thể. Tạo mã QR Code ngân hàng động giúp khách hàng thanh toán chuyển khoản nhanh chóng và chính xác.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-4">
+                    <div class="h-12 w-12 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" class="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-xl text-slate-900">Nhật Ký & Phân Quyền Bảo Mật</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Lưu vết toàn bộ thao tác thêm, sửa, xóa đơn hàng của nhân viên (Activity Logs). Cơ chế phân quyền tài khoản Superadmin và User giúp kiểm soát chặt chẽ an toàn dữ liệu.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLEXIBLE DEPLOYMENT (ONLINE & OFFLINE RESOLUTIONS) -->
+    <section id="giai-phap" class="py-20 bg-white border-t border-slate-100 overflow-hidden relative">
+        <div class="absolute -right-40 bottom-0 w-96 h-96 bg-brand-50 rounded-full blur-3xl -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Visual Infographic -->
+                <div class="lg:col-span-5">
+                    <div class="bg-gradient-to-br from-slate-950 to-slate-800 text-white rounded-[2rem] p-8 shadow-2xl relative border border-slate-700/30">
+                        <h4 class="font-extrabold text-lg text-brand-300 mb-6">Mô hình lựa chọn lắp đặt độc lập</h4>
+                        
+                        <div class="space-y-6">
+                            <!-- Local Offline PC -->
+                            <div class="flex items-start space-x-4">
+                                <div class="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center font-bold text-brand-400 mt-1">1</div>
+                                <div>
+                                    <h5 class="font-extrabold text-sm text-slate-100">Bản Cài Đặt Offline Cục Bộ</h5>
+                                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">Triển khai trên máy chủ vật lý đặt tại cửa hàng. Dữ liệu lưu cục bộ, chạy vĩnh viễn không phụ thuộc mạng internet.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Cloud Online Server -->
+                            <div class="flex items-start space-x-4">
+                                <div class="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center font-bold text-brand-400 mt-1">2</div>
+                                <div>
+                                    <h5 class="font-extrabold text-sm text-slate-100">Bản Triển Khai Cloud Online</h5>
+                                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">Cài đặt trực tiếp trên Web Server riêng của doanh nghiệp. Cho phép truy cập từ xa mọi lúc mọi nơi qua mạng Internet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data safety badge -->
+                        <div class="mt-8 pt-6 border-t border-slate-800 flex items-center space-x-3 text-xs text-slate-400 leading-normal">
+                            <span class="text-green-400 font-extrabold text-lg">🛡️</span>
+                            <span>Hỗ trợ cơ chế tự động Backup dữ liệu ra ổ cứng di động cắm ngoài hàng ngày (cho bản Offline). Bạn sở hữu và kiểm soát 100% dữ liệu.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text explanation -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs tracking-wider uppercase">
+                        🛡️ Đảm bảo an toàn dữ liệu
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        Cài Offline Bảo Mật Tuyệt Đối <br>
+                        <span class="gradient-text">Hoặc Chạy Online Quản Lý Mọi Nơi</span>
+                    </h2>
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                        Mỗi cửa hàng VLXD có cách thức vận hành và nhu cầu sử dụng khác nhau. Chúng tôi mang đến hai phương án triển khai độc lập, an toàn và dễ sử dụng:
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+                        <div class="space-y-2">
+                            <h4 class="font-extrabold text-slate-800 text-base">🖥️ Bản cài Offline cục bộ</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">
+                                Cài đặt trực tiếp trên máy PC tại cửa hàng, chạy trong mạng LAN nội bộ. Tốc độ tải siêu tốc, bán hàng ngay cả khi mất mạng internet, giữ kín dữ liệu nội bộ, sở hữu vĩnh viễn.
+                            </p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-extrabold text-slate-800 text-base">☁ Bản Web Online Cloud</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">
+                                Cài đặt trên máy chủ Web Server đám mây riêng của bạn. Giúp chủ cửa hàng đi ra ngoài, kiểm tra đơn hàng, xem báo cáo doanh thu và đối chiếu nợ nần qua điện thoại di động dễ dàng.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE PLAYGROUND (SANDBOX WIDGETS) -->
+    <section id="trai-nghiem" class="py-20 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Khu Vực <span class="gradient-text">Trải Nghiệm Trực Quan</span>
+                </h2>
+                <p class="text-lg text-slate-500 leading-relaxed">
+                    Hãy tự mình thử nghiệm các công cụ xử lý nghiệp vụ cốt lõi của phần mềm VLXD Manager.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Widget 1: Smart Unit Converter -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6" 
+                     x-data="{
+                        material: 'cat',
+                        quantity: 10,
+                        get result() {
+                            let qty = parseFloat(this.quantity) || 0;
+                            if (this.material === 'cat') {
+                                // 1 Khối ≈ 1.5 Tấn -> 1 Tấn = 0.67 Khối
+                                return {
+                                    primaryVal: qty + ' Tấn',
+                                    secondaryVal: (qty * 0.67).toFixed(2) + ' Mét Khối (m³)',
+                                    note: 'Quy đổi tiêu chuẩn: Cát mịn xây tô / cát bê tông hạt trung'
+                                };
+                            } else if (this.material === 'da') {
+                                // 1 Khối ≈ 1.6 Tấn -> 1 Tấn = 0.625 Khối
+                                return {
+                                    primaryVal: qty + ' Tấn',
+                                    secondaryVal: (qty * 0.625).toFixed(2) + ' Mét Khối (m³)',
+                                    note: 'Quy đổi tiêu chuẩn: Đá xanh 1x2 xây dựng bê tông'
+                                };
+                            } else if (this.material === 'thep') {
+                                // 1 cuộn ≈ 250 kg
+                                return {
+                                    primaryVal: qty + ' Tấn',
+                                    secondaryVal: (qty * 1000 / 250).toFixed(0) + ' Cuộn thép cuộn Ø6',
+                                    note: 'Quy đổi trung bình: Thép Hòa Phát / Pomina Ø6 cuộn tròn'
+                                };
+                            } else if (this.material === 'ximang') {
+                                // 1 bao = 50 kg -> 1 Tấn = 20 bao
+                                return {
+                                    primaryVal: qty + ' Tấn',
+                                    secondaryVal: (qty * 20).toFixed(0) + ' Bao (50 kg/bao)',
+                                    note: 'Quy đổi tiêu chuẩn: Xi măng Hà Tiên / Insee PCB40'
+                                };
+                            }
+                            return { primaryVal: '0', secondaryVal: '0', note: '' };
+                        }
+                     }">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-bold text-xs tracking-wider uppercase mb-3">
+                            Tiện ích kho hàng
+                        </div>
+                        <h3 class="font-extrabold text-2xl text-slate-900 leading-tight">Bộ Tính Quy Đổi Đơn Vị Thông Minh</h3>
+                        <p class="text-slate-500 text-sm mt-1">
+                            Chọn loại vật tư và nhập khối lượng để trải nghiệm cơ chế tự động quy đổi tồn kho chuẩn của phần mềm.
+                        </p>
+                    </div>
+
+                    <!-- Material Selector -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-700">1. Chọn loại vật tư:</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <button @click="material = 'cat'" class="p-3 text-xs sm:text-sm font-bold rounded-xl border text-center transition duration-200"
+                                :class="material === 'cat' ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'">
+                                🧱 Cát xây dựng
+                            </button>
+                            <button @click="material = 'da'" class="p-3 text-xs sm:text-sm font-bold rounded-xl border text-center transition duration-200"
+                                :class="material === 'da' ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'">
+                                🪨 Đá xanh 1x2
+                            </button>
+                            <button @click="material = 'thep'" class="p-3 text-xs sm:text-sm font-bold rounded-xl border text-center transition duration-200"
+                                :class="material === 'thep' ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'">
+                                🌀 Thép cuộn Ø6
+                            </button>
+                            <button @click="material = 'ximang'" class="p-3 text-xs sm:text-sm font-bold rounded-xl border text-center transition duration-200"
+                                :class="material === 'ximang' ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'">
+                                ✉ Xi măng
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input quantity -->
+                    <div class="space-y-2">
+                        <label for="so-luong-nhap" class="block text-sm font-bold text-slate-700">2. Nhập số lượng nhập hàng (Đơn vị gốc: Tấn):</label>
+                        <div class="relative rounded-2xl shadow-sm">
+                            <input type="number" id="so-luong-nhap" x-model="quantity" min="0" step="any"
+                                   class="block w-full pl-5 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white font-bold text-lg text-slate-800 transition duration-150">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-bold">
+                                Tấn
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversion result -->
+                    <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200/60 space-y-2">
+                        <span class="block text-xs font-bold text-amber-700 uppercase tracking-wider">KẾT QUẢ QUY ĐỔI TỰ ĐỘNG TỒN KHO:</span>
+                        <div class="flex items-baseline space-x-2">
+                            <span class="text-3xl font-black text-orange-600" x-text="result.secondaryVal"></span>
+                        </div>
+                        <p class="text-xs text-amber-800 font-bold italic mt-1" x-text="result.note"></p>
+                    </div>
+                </div>
+
+                <!-- Widget 2: Sales & Customer Debt Recorder Simulator (NO SYNC) -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6"
+                     x-data="{
+                        customer: 'hung',
+                        invoiceAmount: 12000000,
+                        paidAmount: 5000000,
+                        paymentMethod: 'ck',
+                        get debtAmount() {
+                            let inv = parseFloat(this.invoiceAmount) || 0;
+                            let paid = parseFloat(this.paidAmount) || 0;
+                            return Math.max(0, inv - paid);
+                        },
+                        formatMoney(val) {
+                            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+                        }
+                     }">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs tracking-wider uppercase mb-3">
+                            Nghiệp vụ bán hàng & công nợ
+                        </div>
+                        <h3 class="font-extrabold text-2xl text-slate-900 leading-tight">Giả Lập Bán Hàng & Ghi Nhận Công Nợ</h3>
+                        <p class="text-slate-500 text-sm mt-1">
+                            Trải nghiệm cách hệ thống tự động ghi nhận phiếu thu, doanh số và cập nhật công nợ cho khách hàng ngay lập tức.
+                        </p>
+                    </div>
+
+                    <!-- Simulator Inputs -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase">1. Chọn khách hàng:</label>
+                            <select x-model="customer" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="hung">🏗️ Nhà thầu Hùng</option>
+                                <option value="minh">🏠 Anh Minh (Khách lẻ)</option>
+                                <option value="dung">🏢 Cty Xây Dựng Nam Phát</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase">2. Hình thức trả:</label>
+                            <select x-model="paymentMethod" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="ck">💳 Chuyển khoản Vietcombank</option>
+                                <option value="tm">💵 Tiền mặt tại quầy</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="gia-tri-don" class="block text-xs font-bold text-slate-700 uppercase">3. Giá trị đơn hàng (VNĐ):</label>
+                            <input type="number" id="gia-tri-don" x-model="invoiceAmount" step="500000" min="0"
+                                   class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="tien-tra-truoc" class="block text-xs font-bold text-slate-700 uppercase">4. Khách trả trước (VNĐ):</label>
+                            <input type="number" id="tien-tra-truoc" x-model="paidAmount" step="500000" min="0"
+                                   class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                    </div>
+
+                    <!-- Simulation Result Log -->
+                    <div class="p-4 bg-slate-900 text-slate-200 rounded-2xl space-y-3 font-mono text-xs shadow-inner">
+                        <div class="text-brand-400 font-bold border-b border-slate-800 pb-1.5 flex justify-between">
+                            <span>💻 KẾT QUẢ GHI NHẬN SỔ SÁCH:</span>
+                            <span class="text-green-400">● Đã lưu</span>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">1. Tạo hóa đơn bán lẻ:</span>
+                                <span class="font-bold text-white" x-text="formatMoney(invoiceAmount)"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">2. Phiếu thu nhận tiền:</span>
+                                <span class="font-bold text-green-400" x-text="formatMoney(paidAmount)"></span>
+                            </div>
+                            <div class="flex justify-between border-t border-slate-800/80 pt-1.5 text-sm">
+                                <span class="text-orange-400 font-bold">3. Ghi nợ vào tài khoản khách:</span>
+                                <span class="font-bold text-orange-400" x-text="formatMoney(debtAmount)"></span>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-500 leading-normal border-t border-slate-800/80 pt-1.5">
+                            * Hệ thống tự động khấu trừ số lượng vật tư tồn kho, ghi chép nhật ký doanh thu theo ngày và cộng dồn nợ của khách hàng trên Ledger tương ứng.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQS ACCORDION -->
+    <section id="faq" class="py-20 bg-white border-t border-slate-200/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16 space-y-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Giải Đáp <span class="gradient-text">Thắc Mắc Khách Hàng</span>
+                </h2>
+                <p class="text-slate-500">
+                    Những câu hỏi thường gặp khi khách hàng tìm hiểu và triển khai phần mềm quản lý kho VLXD.
+                </p>
+            </div>
+
+            <!-- FAQ List -->
+            <div class="space-y-4" x-data="{ activeFaq: 1 }">
+                <!-- FAQ 1 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition duration-300">
+                    <button @click="activeFaq = activeFaq === 1 ? 0 : 1" class="w-full text-left px-6 py-5 bg-slate-50 hover:bg-slate-100/50 flex items-center justify-between outline-none">
+                        <span class="font-extrabold text-slate-900 text-base sm:text-lg">1. Cửa hàng tôi không có internet thì phần mềm có chạy được không?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 text-slate-500" :class="activeFaq === 1 ? 'rotate-180' : ''">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div x-show="activeFaq === 1" x-transition class="px-6 py-5 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed bg-white">
+                        Hoàn toàn được! Nếu cửa hàng chọn giải pháp cài đặt **Offline**, dữ liệu sẽ được lưu trực tiếp trên ổ cứng máy tính tại cửa hàng. Bạn không cần kết nối internet vẫn bán hàng, nhập kho, kiểm kho, in hóa đơn và theo dõi công nợ bình thường trong mạng LAN. Dữ liệu độc lập và an toàn tuyệt đối.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition duration-300">
+                    <button @click="activeFaq = activeFaq === 2 ? 0 : 2" class="w-full text-left px-6 py-5 bg-slate-50 hover:bg-slate-100/50 flex items-center justify-between outline-none">
+                        <span class="font-extrabold text-slate-900 text-base sm:text-lg">2. Khi đi công tác xa, tôi muốn xem báo cáo doanh số từ xa thì làm thế nào?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 text-slate-500" :class="activeFaq === 2 ? 'rotate-180' : ''">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div x-show="activeFaq === 2" x-transition class="px-6 py-5 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed bg-white" style="display:none;">
+                        Bạn nên chọn gói cài đặt **Online**. Phần mềm sẽ được triển khai trên Web Server riêng của doanh nghiệp. Bạn chỉ cần mở điện thoại di động, iPad hoặc laptop truy cập vào đường link website quản lý là có thể giám sát dòng tiền, doanh số và duyệt hóa đơn từ xa.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition duration-300">
+                    <button @click="activeFaq = activeFaq === 3 ? 0 : 3" class="w-full text-left px-6 py-5 bg-slate-50 hover:bg-slate-100/50 flex items-center justify-between outline-none">
+                        <span class="font-extrabold text-slate-900 text-base sm:text-lg">3. Phần mềm có hỗ trợ quy đổi vật tư cát, đá xanh, sắt thép không?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 text-slate-500" :class="activeFaq === 3 ? 'rotate-180' : ''">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div x-show="activeFaq === 3" x-transition class="px-6 py-5 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed bg-white" style="display:none;">
+                        Có! Đây là tính năng thế mạnh chuyên sâu của VLXD Manager. Bạn chỉ cần thiết lập tỷ lệ quy đổi một lần (ví dụ: cát từ Tấn sang m³, sắt cuộn sang kg, xi măng từ Tấn sang bao). Khi làm đơn hàng hoặc phiếu nhập kho, kế toán chỉ việc chọn đơn vị bán lẻ, phần mềm tự động quy đổi ra giá trị tồn kho chuẩn tương đương theo đúng định nghĩa.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition duration-300">
+                    <button @click="activeFaq = activeFaq === 4 ? 0 : 4" class="w-full text-left px-6 py-5 bg-slate-50 hover:bg-slate-100/50 flex items-center justify-between outline-none">
+                        <span class="font-extrabold text-slate-900 text-base sm:text-lg">4. Phí phần mềm tính thế nào? Có thu phí duy trì hàng tháng không?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" class="w-5 h-5 transition-transform duration-200 text-slate-500" :class="activeFaq === 4 ? 'rotate-180' : ''">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div x-show="activeFaq === 4" x-transition class="px-6 py-5 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed bg-white" style="display:none;">
+                        Chúng tôi áp dụng mô hình **mua đứt sử dụng trọn đời**, cài đặt một lần vĩnh viễn trên máy tính của bạn, cam kết 100% không thu phí duy trì hàng tháng hoặc hàng năm. Phí dịch vụ chỉ phát sinh khi bạn yêu cầu nâng cấp thêm tính năng ngoài thiết kế hoặc muốn thuê dịch vụ hạ tầng đám mây cho bản Online.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIRECT ACTION REGISTRATION (HOTLINE & ZALO ONLY) -->
+    <section id="tu-van" class="py-20 bg-slate-50 border-t border-slate-200/50 relative overflow-hidden">
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-brand-100/30 rounded-full blur-3xl -z-10"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden p-8 sm:p-12 text-center space-y-8">
+                <div class="max-w-2xl mx-auto space-y-4">
+                    <span class="text-xs uppercase font-extrabold tracking-wider text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">Liên hệ trực tiếp để dùng thử</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">Đăng Ký Trải Nghiệm & Cài Đặt</h2>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        Không cần điền form đăng ký phức tạp. Hãy nhấp cuộc gọi trực tiếp hoặc kết nối qua ứng dụng Zalo để được nhân viên kỹ thuật tư vấn giải pháp cài đặt tối ưu cho cửa hàng của bạn.
+                    </p>
+                </div>
+
+                <!-- Call and Zalo action buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto pt-4">
+                    <!-- Action Call -->
+                    <a href="tel:0986929914" class="flex flex-col items-center p-6 bg-amber-50 hover:bg-amber-100/80 border border-brand-200 rounded-3xl transition duration-200 group">
+                        <div class="h-14 w-14 rounded-2xl bg-gradient-to-tr from-brand-500 to-orange-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-200">
+                            📞
+                        </div>
+                        <span class="block mt-4 text-xs text-brand-800 font-extrabold uppercase tracking-wider">Nhấp gọi tư vấn nhanh</span>
+                        <span class="block mt-1 font-black text-xl text-slate-900">0986.929.914</span>
+                    </a>
+                    
+                    <!-- Action Zalo -->
+                    <a href="https://zalo.me/0986929914" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center p-6 bg-blue-50 hover:bg-blue-100/60 border border-blue-200 rounded-3xl transition duration-200 group">
+                        <div class="h-14 w-14 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
+                            💬
+                        </div>
+                        <span class="block mt-4 text-xs text-blue-800 font-extrabold uppercase tracking-wider">Nhắn tin chat qua Zalo</span>
+                        <span class="block mt-1 font-black text-xl text-slate-900">Zalo: 0986.929.914</span>
+                    </a>
+                </div>
+
+                <p class="text-xs text-slate-400 leading-normal">
+                    * Đội ngũ hỗ trợ kỹ thuật làm việc từ 7:30 - 21:00 (Kể cả Thứ 7 và Chủ Nhật). Lắp đặt bàn giao hướng dẫn sử dụng tận nơi.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 rounded-xl bg-brand-500 flex items-center justify-center text-white text-lg font-black shadow-lg shadow-brand-500/20">
+                    V
+                </div>
+                <div>
+                    <span class="block text-white font-extrabold text-lg leading-tight">VLXD Manager</span>
+                    <span class="block text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Hệ thống Sổ hóa VLXD</span>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="flex flex-wrap justify-center gap-6 text-sm font-semibold">
+                <a href="#loi-ich" class="hover:text-white transition-colors">Lợi Ích</a>
+                <a href="#chuc-nang" class="hover:text-white transition-colors">Tính Năng</a>
+                <a href="#giai-phap" class="hover:text-white transition-colors">Online/Offline</a>
+                <a href="#trai-nghiem" class="hover:text-white transition-colors">Trải Nghiệm</a>
+                <a href="tel:0986929914" class="hover:text-white font-extrabold transition-colors text-orange-400">Hotline: 0986.929.914</a>
+            </div>
+
+            <!-- Copy -->
+            <div class="text-xs text-slate-500 text-center md:text-right">
+                © 2026 VLXD Manager. All rights reserved. <br>
+                Hỗ trợ kỹ thuật & Phát triển bởi <span class="font-semibold text-slate-300">VinhDo</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
